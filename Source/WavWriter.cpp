@@ -14,13 +14,13 @@ WavWriter::WavWriter() {}
 
 WavWriter::~WavWriter() {}
 
-bool WavWriter::init(int samplerate, int bits) {
+bool WavWriter::init(int samplerate, int bits, std::string name) {
 
     if (m_isClear) {
 
         m_isClear = false;
 
-        DBG("Initialising");
+        //DBG("Initialising");
 
         m_samplerate = samplerate;
         m_bits = bits;
@@ -31,7 +31,7 @@ bool WavWriter::init(int samplerate, int bits) {
         m_byterate = m_samplerate * m_bits * m_channels / 8; // (Sample Rate * BitsPerSample * Channels) / 8
         m_blockAlign = m_channels * m_bits / 8; // data block size (size of two integer samples, one for each channel, in bytes)
 
-        m_file.open(m_filename, std::ios::out | std::ios::binary);
+        m_file.open(name, std::ios::out | std::ios::binary);
 
         if (!m_file) {
             DBG("Cannot open file!");
@@ -64,12 +64,12 @@ void WavWriter::write(float in[2][HOP_SIZE]) {
 
         m_isClear = false;
 
-        DBG("Recording");
+        //DBG("Recording");
 
         for (int iSample = 0; iSample < HOP_SIZE; iSample++)
         {
             for (int iChannel = 0; iChannel < m_channels; iChannel++) {
-                short sample = floor(in[iChannel][iSample] * 32767);
+                short sample = floor(in[iChannel][iSample] * 32767 / 50);
                 m_file.write((char*)(&sample), 2);
             }
 
@@ -87,12 +87,12 @@ void WavWriter::write(std::vector<std::vector<float>> in) {
 
         m_isClear = false;
 
-        DBG("Recording");
+        //DBG("Recording");
 
         for (int iSample = 0; iSample < HOP_SIZE; iSample++)
         {
             for (int iChannel = 0; iChannel < m_channels; iChannel++) {
-                short sample = floor(in.at(iChannel).at(iSample) * 32767);
+                short sample = floor(in.at(iChannel).at(iSample) * 32767 / 50);
                 m_file.write((char*)(&sample), 2);
                 
                 m_numSamples++;

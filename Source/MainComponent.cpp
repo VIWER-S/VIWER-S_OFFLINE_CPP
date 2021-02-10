@@ -47,6 +47,9 @@ void MainComponent::paint (juce::Graphics& g)
     m_ui_load.setBounds(10, 10, 60, 20);
 
     if (m_sample != 0) {
+
+        // Draw levels
+
         float wid = ((float) getWidth() - 20) / m_numBlocks;
         float hei = ((float) 100) / m_numChannels;
 
@@ -62,6 +65,7 @@ void MainComponent::paint (juce::Graphics& g)
             }
         }
 
+        // Draw sources
 
         hei = ((float)100) / (MAX_THETA / STEP_THETA);
         
@@ -78,7 +82,30 @@ void MainComponent::paint (juce::Graphics& g)
             }
         }
 
+        // Draw wave left
 
+        wid = ((float)getWidth() - 20) / m_numSamples;
+
+        g.setColour(juce::Colours::white);
+
+        juce::Path array;
+        array.startNewSubPath(10, 285);
+        g.fillPath(array);
+        for (int iSample = 0; iSample < m_numSamples; iSample++) {
+            array.lineTo(10 + iSample * wid, 285 + 25 * m_processed_complete.at(0).at(iSample));
+        }
+        array.closeSubPath();
+        g.fillPath(array);
+
+        // Draw wave right
+
+        array.startNewSubPath(10, 345);
+        g.fillPath(array);
+        for (int iSample = 0; iSample < m_numSamples; iSample++) {
+            array.lineTo(10 + iSample * wid, 345 + 25 * m_processed_complete.at(1).at(iSample));
+        }
+        array.closeSubPath();
+        g.fillPath(array);
     }
 
     // Borders
@@ -151,6 +178,12 @@ void MainComponent::callbackOpen()
                 m_fading_imp.at(iBlock).resize(MAX_SOURCES, -255.0f);
             }
 
+            m_processed_complete.resize(2);
+            m_processed_complete.at(0).resize(m_numSamples, 0.0f);
+            m_processed_complete.at(1).resize(m_numSamples, 0.0f);
+
+            m_WavWriter.init(m_samplerate, 16, myFile.getFileNameWithoutExtension().toStdString().append("_processed.wav"));
+
             loop();
         }
     }
@@ -199,21 +232,27 @@ void MainComponent::loop() {
             for (int iSample = 0; iSample < BUFFER_SIZE; iSample++) {
               
                 if (iChannel == 0) {
-                    m_audioOut_L[iSample] = m_processed.at(iChannel).at(iSample);
+                    m_processed_complete.at(0).at(m_sample + iSample) = m_processed.at(iChannel).at(iSample) / 50;
+                    
                 }
                 else {
-                    m_audioOut_R[iSample] = m_processed.at(iChannel).at(iSample);
+                    m_processed_complete.at(1).at(m_sample + iSample) = m_processed.at(iChannel).at(iSample) / 50;
                 }
             }
         }
+
+        m_WavWriter.write(m_processed);
         
         m_sample += BUFFER_SIZE;
         m_block++;
         
     }
 
+    m_WavWriter.close();
+
     repaint();
     DBG("finished.");
+   
 }
 
 

@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "JuceHeader.h"
 #include "Viwer.h"
+#include "WavWriter.h"
 
 
 //==============================================================================
@@ -57,12 +58,11 @@ private:
     Viwer m_Viwer;
     std::vector<int> m_channelOrder;
     std::vector<std::vector<float>> m_processed;
+    std::vector<std::vector<float>> m_processed_complete;
     float m_audioOut_L[BUFFER_SIZE];
-    //float* m_ptr_audioOut_L = m_audioOut_L;
     float m_audioOut_R[BUFFER_SIZE];
-    //float* m_ptr_audioOut_R = m_audioOut_R;
     double m_inBuffer[SENSORS][BUFFER_SIZE];
-    float* m_outBuffer;
+    float m_record[2][BUFFER_SIZE];
 
     // Pointer arrays to convey tracked sources from Viwer to DisplayLocalisation
     double m_directions_kal[MAX_SOURCES];
@@ -79,6 +79,8 @@ private:
     std::vector<std::vector<float>> m_kalman_imp;
     std::vector<std::vector<float>> m_fading_dir;
     std::vector<std::vector<float>> m_fading_imp;
+
+    WavWriter m_WavWriter;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

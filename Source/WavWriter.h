@@ -23,7 +23,7 @@ public:
     WavWriter::WavWriter();
     WavWriter::~WavWriter();
 
-    bool WavWriter::init(int samplerate, int bits);
+    bool WavWriter::init(int samplerate, int bits, std::string name);
     void WavWriter::write(float in[2][HOP_SIZE]);
     void WavWriter::write(std::vector<std::vector<float>> in);
     bool WavWriter::close();
