@@ -4,11 +4,67 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="dlyELj" name="ViwerS_Offline">
     <GROUP id="{3016C1F4-0DC9-F01D-C6D9-153CED669151}" name="Source">
+      <FILE id="fPxhSo" name="audio_processing.h" compile="0" resource="0"
+            file="Source/audio_processing.h"/>
+      <FILE id="OJk9Ya" name="Beamforming.cpp" compile="1" resource="0" file="Source/Beamforming.cpp"/>
+      <FILE id="RP2cbe" name="Beamforming.h" compile="0" resource="0" file="Source/Beamforming.h"/>
+      <FILE id="fj2rLZ" name="CandidateList.cpp" compile="1" resource="0"
+            file="Source/CandidateList.cpp"/>
+      <FILE id="seahVn" name="CandidateList.h" compile="0" resource="0" file="Source/CandidateList.h"/>
+      <FILE id="t38mK8" name="Comm.cpp" compile="1" resource="0" file="Source/HeadTrackerCpp/Comm.cpp"/>
+      <FILE id="QaYph4" name="Comm.h" compile="0" resource="0" file="Source/HeadTrackerCpp/Comm.h"/>
       <FILE id="O8HgpH" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
+      <FILE id="TSqZmO" name="DisplayLocalisation.cpp" compile="1" resource="0"
+            file="Source/DisplayLocalisation.cpp"/>
+      <FILE id="GuKu6w" name="DisplayLocalisation.h" compile="0" resource="0"
+            file="Source/DisplayLocalisation.h"/>
+      <FILE id="nViPoe" name="DisplaySources.cpp" compile="1" resource="0"
+            file="Source/DisplaySources.cpp"/>
+      <FILE id="YXK4l0" name="DisplaySources.h" compile="0" resource="0"
+            file="Source/DisplaySources.h"/>
+      <FILE id="bX09iq" name="DisplayWaveform.cpp" compile="1" resource="0"
+            file="Source/DisplayWaveform.cpp"/>
+      <FILE id="CU1Iv2" name="DisplayWaveform.h" compile="0" resource="0"
+            file="Source/DisplayWaveform.h"/>
+      <FILE id="lagx74" name="FFT.cpp" compile="1" resource="0" file="Source/FFT.cpp"/>
+      <FILE id="HF5D34" name="FFT.h" compile="0" resource="0" file="Source/FFT.h"/>
+      <FILE id="YoGlCz" name="FindPeaks.cpp" compile="1" resource="0" file="Source/FindPeaks.cpp"/>
+      <FILE id="dCBDyv" name="FindPeaks.h" compile="0" resource="0" file="Source/FindPeaks.h"/>
+      <FILE id="Vmp4yM" name="HeadTracking.cpp" compile="1" resource="0"
+            file="Source/HeadTracking.cpp"/>
+      <FILE id="T6pzyr" name="HeadTracking.h" compile="0" resource="0" file="Source/HeadTracking.h"/>
+      <FILE id="oYqKj3" name="HRTF.cpp" compile="1" resource="0" file="Source/HRTF.cpp"/>
+      <FILE id="IGVQ09" name="HRTF.h" compile="0" resource="0" file="Source/HRTF.h"/>
+      <FILE id="rkGkXL" name="Kalman.cpp" compile="1" resource="0" file="Source/Kalman.cpp"/>
+      <FILE id="PvkY5k" name="Kalman.h" compile="0" resource="0" file="Source/Kalman.h"/>
+      <FILE id="qejRLs" name="Localisation.cpp" compile="1" resource="0"
+            file="Source/Localisation.cpp"/>
+      <FILE id="SW8U0D" name="Localisation.h" compile="0" resource="0" file="Source/Localisation.h"/>
+      <FILE id="JSFrfD" name="Loudness.cpp" compile="1" resource="0" file="Source/Loudness.cpp"/>
+      <FILE id="DQ8w8J" name="Loudness.h" compile="0" resource="0" file="Source/Loudness.h"/>
       <FILE id="kLcuiO" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
-      <FILE id="QXlkp6" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="FM241V" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
+      <FILE id="QXlkp6" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="ebT9HF" name="MicArray.cpp" compile="1" resource="0" file="Source/MicArray.cpp"/>
+      <FILE id="FWBxpJ" name="MicArray.h" compile="0" resource="0" file="Source/MicArray.h"/>
+      <FILE id="ACSuBd" name="QuadraticInterpolation.cpp" compile="1" resource="0"
+            file="Source/QuadraticInterpolation.cpp"/>
+      <FILE id="WmsLuy" name="QuadraticInterpolation.h" compile="0" resource="0"
+            file="Source/QuadraticInterpolation.h"/>
+      <FILE id="QEQUBY" name="Source.cpp" compile="1" resource="0" file="Source/Source.cpp"/>
+      <FILE id="F3cfuu" name="Source.h" compile="0" resource="0" file="Source/Source.h"/>
+      <FILE id="TrAzZx" name="SourceManager.cpp" compile="1" resource="0"
+            file="Source/SourceManager.cpp"/>
+      <FILE id="KXDWHK" name="SourceManager.h" compile="0" resource="0" file="Source/SourceManager.h"/>
+      <FILE id="Er5FVr" name="SteeringVector.cpp" compile="1" resource="0"
+            file="Source/SteeringVector.cpp"/>
+      <FILE id="LjwU2d" name="SteeringVector.h" compile="0" resource="0"
+            file="Source/SteeringVector.h"/>
+      <FILE id="wS3v5G" name="Viwer.cpp" compile="1" resource="0" file="Source/Viwer.cpp"/>
+      <FILE id="oUU5yl" name="Viwer.h" compile="0" resource="0" file="Source/Viwer.h"/>
+      <FILE id="PvJOOK" name="WavWriter.cpp" compile="1" resource="0" file="Source/WavWriter.cpp"/>
+      <FILE id="FVHVlI" name="WavWriter.h" compile="0" resource="0" file="Source/WavWriter.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>

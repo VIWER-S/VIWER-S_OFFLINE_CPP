@@ -1,6 +1,7 @@
 #pragma once
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 128
+#define HOP_SIZE 128
 #define CHANNELS_IN 16
 #define CHANNELS_OUT 2
 #define SENSORS_BOOMERANG 15

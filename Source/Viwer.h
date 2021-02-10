@@ -67,19 +67,7 @@ private:
 
     std::vector<std::vector<double>> m_directions;
 
-    // Pointers to convey found directions from Viwer to DisplayLocalisation
-    double* m_ptrDir;
-    double* m_ptrImp;
-    // Pointers to convey tracked sources from Viwer to DisplayLocalisation
-    double* m_ptrDir_kal;
-    double* m_ptrImp_kal;
-    // Pointers to convey fading sources from Viwer to DisplayLocalisation
-    double* m_ptrDir_fad;
-    double* m_ptrImp_fad;
-    // Pointer to convey head tracker direction from Viwer to DispalyLocalisation
-    float* m_ptrHT;
-
-    float m_trackDirection[3] = {0.0f, 0.0f, 0.0f};
+    //float m_trackDirection[3] = {0.0f, 0.0f, 0.0f};
 
     SourceManager m_SourceManager;
     Beamforming m_Beamforming;
@@ -87,6 +75,17 @@ private:
     Localisation m_Localisation;
     spectrum m_Fft = spectrum(BUFFER_SIZE);
     HeadTracking m_HeadTracking;
+
+    // Pointers to convey found directions
+    double* m_ptrDir;
+    double* m_ptrImp;
+    // Pointers to convey tracked sources
+    double* m_ptrDir_kal;
+    double* m_ptrImp_kal;
+    // Pointers to convey fading sources
+    double* m_ptrDir_fad;
+    double* m_ptrImp_fad;
+
 
 
 

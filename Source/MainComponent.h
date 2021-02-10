@@ -2,6 +2,7 @@
 
 #include "Constants.h"
 #include "JuceHeader.h"
+#include "Viwer.h"
 
 
 //==============================================================================
@@ -51,8 +52,33 @@ private:
     juce::AudioFormatManager m_formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> m_playSource;
     juce::AudioTransportSource m_transport;
-
     juce::AudioSampleBuffer m_buff;
+
+    Viwer m_Viwer;
+    std::vector<int> m_channelOrder;
+    std::vector<std::vector<float>> m_processed;
+    float m_audioOut_L[BUFFER_SIZE];
+    //float* m_ptr_audioOut_L = m_audioOut_L;
+    float m_audioOut_R[BUFFER_SIZE];
+    //float* m_ptr_audioOut_R = m_audioOut_R;
+    double m_inBuffer[SENSORS][BUFFER_SIZE];
+    float* m_outBuffer;
+
+    // Pointer arrays to convey tracked sources from Viwer to DisplayLocalisation
+    double m_directions_kal[MAX_SOURCES];
+    double* m_ptrLoc_kal = m_directions_kal;
+    double m_Importance_kal[MAX_SOURCES];
+    double* m_ptrImp_kal = m_Importance_kal;
+    // Pointer arrays to convey fading sources from Viwer to DisplayLocalisation
+    double m_directions_fad[MAX_SOURCES];
+    double* m_ptrLoc_fad = m_directions_fad;
+    double m_Importance_fad[MAX_SOURCES];
+    double* m_ptrImp_fad = m_Importance_fad;
+
+    std::vector<std::vector<float>> m_kalman_dir;
+    std::vector<std::vector<float>> m_kalman_imp;
+    std::vector<std::vector<float>> m_fading_dir;
+    std::vector<std::vector<float>> m_fading_imp;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

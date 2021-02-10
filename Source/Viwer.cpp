@@ -84,12 +84,6 @@ std::vector<double> Viwer::sqrtHann(int size) {
 }
 
 std::vector<std::vector<float>> Viwer::process(double inBuffer[SENSORS][BUFFER_SIZE]){
-   
-    time_t tstart, tend;
-    tstart = time(0);
-
-    //float arr[2] = { 10 * log10(pow(inBuffer[0][0], 2)), 10 * log10(pow(inBuffer[1][0], 2)) };
- 
 
     // Generation of the Spectrum
     for (int iSensor = 0; iSensor < m_numChannels; iSensor++) {
@@ -119,16 +113,6 @@ std::vector<std::vector<float>> Viwer::process(double inBuffer[SENSORS][BUFFER_S
 
     std::vector<Source> fadingSources = m_SourceManager.getFadingSources();
 
-    // Write peaks to buffer
-    for (int iPeak = 0; iPeak < directions.size(); iPeak++) {
-        *(m_ptrDir + iPeak) = directions.at(iPeak).at(0);
-        *(m_ptrImp + iPeak) = directions.at(iPeak).at(1);
-    }
-    for (int iPeak = directions.size(); iPeak < MAX_SOURCES; iPeak++) {
-        *(m_ptrDir + iPeak) = -255.0;
-        *(m_ptrImp + iPeak) = -255.0;
-    }
-
     // Write kalman sources to buffer
     for (int iSource = 0; iSource < kalmanPeaks.size(); iSource++) {
         *(m_ptrDir_kal + iSource) = kalmanPeaks.at(iSource).getAngle();
@@ -138,8 +122,7 @@ std::vector<std::vector<float>> Viwer::process(double inBuffer[SENSORS][BUFFER_S
         *(m_ptrDir_kal + iSource) = -255.0;
         *(m_ptrImp_kal + iSource) = -255.0;
     }
-   
-    
+
     // Write fading sources to buffer
     // ATTENTION::: NUMBER OF FADING SOURCES NEEDS TO BE CONTROLLED!!!
     for (int iFade = 0; iFade < fadingSources.size(); iFade++) {
@@ -173,32 +156,6 @@ std::vector<std::vector<float>> Viwer::process(double inBuffer[SENSORS][BUFFER_S
 
     //m_HeadTracking.audio_processing_float();
     
-    /*std::string mess = "Directions: ";
-    mess.append(std::to_string(m_trackDirection[0]));
-    mess.append(", ");
-    mess.append(std::to_string(m_trackDirection[1]));
-    mess.append(", "); 
-    mess.append(std::to_string(m_trackDirection[2]));*/
-    //DBG(mess);
-
-
-    /*std::ofstream file1("data_orig.txt");
-    std::ofstream file2("data_real.txt");
-    std::ofstream file3("data_imag.txt");
-
-    for (int iSample = 0; iSample < BUFFER_SIZE; iSample++) {
-        file1 << inBuffer[0][iSample] * m_window.at(iSample) << ",";
-        file2 << specDouble[0][iSample][0] << ",";
-        file3 << specDouble[0][iSample][1] << ",";
-    }*/
-
-  /*
-    tend = time(0);
-    std::string mess = "It took "; 
-    mess.append(std::to_string(difftime(tend, tstart)));
-    mess.append(" second(s).");
-    DBG(mess);
-    */
     return m_audioOut;// arr;
 
 }

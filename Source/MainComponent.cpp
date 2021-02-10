@@ -11,6 +11,25 @@ MainComponent::MainComponent()
     addAndMakeVisible(m_ui_load);
 
     setSize (600, 400);
+
+    for (int iChannel = 0; iChannel < SENSORS; iChannel++) {
+        for (int iSample = 0; iSample < BUFFER_SIZE; iSample++) {
+            m_inBuffer[iChannel][iSample] = 0.0;
+        }
+    }
+
+    m_channelOrder.resize(SENSORS, 0);
+    m_channelOrder = { 1, 0, 3, 2, 4, 7, 6, 9, 8, 11, 10, 13, 12, 15, 14 };
+
+    for (int iSource = 0; iSource < MAX_SOURCES; iSource++) {
+        m_directions_kal[iSource] = -255.0;
+        m_Importance_kal[iSource] = -255.0;
+        m_directions_fad[iSource] = -255.0;
+        m_Importance_fad[iSource] = -255.0;
+    }
+
+    m_Viwer.setDirectionBuffer(nullptr, m_ptrLoc_kal, m_ptrLoc_fad);
+    m_Viwer.setImportanceBuffer(nullptr, m_ptrImp_kal, m_ptrImp_fad);
 }
 
 MainComponent::~MainComponent()
@@ -29,7 +48,7 @@ void MainComponent::paint (juce::Graphics& g)
 
     if (m_sample != 0) {
         float wid = ((float) getWidth() - 20) / m_numBlocks;
-        float hei = ((float) getHeight() - 80) / m_numChannels;
+        float hei = ((float) 100) / m_numChannels;
 
         for (int iBlock = 0; iBlock < m_numBlocks; iBlock++) {
             for (int iChannel = 0; iChannel < m_numChannels; iChannel++) {
@@ -42,8 +61,35 @@ void MainComponent::paint (juce::Graphics& g)
 
             }
         }
+
+
+        hei = ((float)100) / (MAX_THETA / STEP_THETA);
+        
+        for (int iBlock = 0; iBlock < m_numBlocks; iBlock++) {
+            for (int iSource = 0; iSource < MAX_SOURCES; iSource++) {
+                if (m_kalman_dir.at(iBlock).at(iSource) != -255) {
+                    g.setColour(juce::Colour(m_kalman_imp.at(iBlock).at(iSource) * 255, 0, 0));
+                    g.drawRect(10 + iBlock * wid, 150 + m_kalman_dir.at(iBlock).at(iSource) * hei, wid, 1.0f);
+                }
+                if (m_fading_dir.at(iBlock).at(iSource) != -255) {
+                    g.setColour(juce::Colour(100, 100, m_fading_imp.at(iBlock).at(iSource) * 255));
+                    g.drawRect(10 + iBlock * wid, 150 + m_fading_dir.at(iBlock).at(iSource) * hei, wid, 1.0f);
+                }
+            }
+        }
+
+
     }
 
+    // Borders
+    g.setColour(juce::Colours::white);
+    // Levels
+    g.drawRect(9, 39, getWidth() - 18, 102, 1.0);
+    // Source directions
+    g.drawRect(9, 149, getWidth() - 18, 102, 1.0);
+    // Wave output
+    g.drawRect(9, 259, getWidth() - 18, 52, 1.0);
+    g.drawRect(9, 319, getWidth() - 18, 52, 1.0);
 }
 
 void MainComponent::resized()
@@ -94,6 +140,16 @@ void MainComponent::callbackOpen()
             for (int iChannel = 0; iChannel < m_numChannels; iChannel++) {
                 m_levels.at(iChannel).resize(m_numBlocks, 0.0f);
             }
+            m_kalman_dir.resize(m_numBlocks);
+            m_kalman_imp.resize(m_numBlocks);
+            m_fading_dir.resize(m_numBlocks);
+            m_fading_imp.resize(m_numBlocks);
+            for (int iBlock = 0; iBlock < m_numBlocks; iBlock++) {
+                m_kalman_dir.at(iBlock).resize(MAX_SOURCES, -255.0f);
+                m_kalman_imp.at(iBlock).resize(MAX_SOURCES, -255.0f);
+                m_fading_dir.at(iBlock).resize(MAX_SOURCES, -255.0f);
+                m_fading_imp.at(iBlock).resize(MAX_SOURCES, -255.0f);
+            }
 
             loop();
         }
@@ -102,24 +158,55 @@ void MainComponent::callbackOpen()
 }
 
 void MainComponent::loop() {
+
     while (m_sample < m_numSamples - BUFFER_SIZE) {
-    
-
-
-        //DBG(m_buffer.buffer->getNumSamples());
 
         for (int iChannel = 0; iChannel < m_numChannels; iChannel++) {
             const float* tmp = m_buff.getReadPointer(iChannel, m_sample);
             m_levels.at(iChannel).at(m_block) = rmsLevel(tmp, BUFFER_SIZE);
 
-            if (m_levels.at(iChannel).at(m_block) < minLevel) {
+            if (m_levels.at(iChannel).at(m_block) < minLevel && iChannel != 5) {
                 minLevel = m_levels.at(iChannel).at(m_block);
             }
-            else if (m_levels.at(iChannel).at(m_block) > maxLevel) {
+            else if (m_levels.at(iChannel).at(m_block) > maxLevel && iChannel != 5) {
                 maxLevel = m_levels.at(iChannel).at(m_block);
             }
         }
 
+
+        int sensor = 0;
+        for (int iChan : m_channelOrder)
+        {
+            const float* inBuffer = m_buff.getReadPointer(iChan, m_sample);
+            for (int iSample = 0; iSample < BUFFER_SIZE; iSample++)
+            {
+                m_inBuffer[sensor][iSample] = (double)inBuffer[iSample];
+            }
+            sensor++;
+        }
+
+        m_processed = m_Viwer.process(m_inBuffer);
+
+        for (int iSource = 0; iSource < MAX_SOURCES; iSource++) {
+            m_kalman_dir.at(m_block).at(iSource) = *(m_ptrLoc_kal + iSource);
+            m_kalman_imp.at(m_block).at(iSource) = *(m_ptrImp_kal + iSource);
+            m_fading_dir.at(m_block).at(iSource) = *(m_ptrLoc_fad + iSource);
+            m_fading_imp.at(m_block).at(iSource) = *(m_ptrImp_fad + iSource);
+        }
+
+        for (int iChannel = 0; iChannel < 2; iChannel++) {
+
+            for (int iSample = 0; iSample < BUFFER_SIZE; iSample++) {
+              
+                if (iChannel == 0) {
+                    m_audioOut_L[iSample] = m_processed.at(iChannel).at(iSample);
+                }
+                else {
+                    m_audioOut_R[iSample] = m_processed.at(iChannel).at(iSample);
+                }
+            }
+        }
+        
         m_sample += BUFFER_SIZE;
         m_block++;
         
